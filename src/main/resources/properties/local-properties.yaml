@@ -1,0 +1,9 @@
+https:
+  port: "8081"
+  
+api:
+  basePath: "/api/v1"
+  
+database:
+  user: "toto"
+  password: "${secure::database.password}"
