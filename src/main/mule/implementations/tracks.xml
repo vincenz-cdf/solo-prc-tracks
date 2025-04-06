@@ -1,17 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
 	<sub-flow name="postEvents" doc:id="7f0d7e39-a0a9-4e37-9cd2-7db15def0d2d" >
 		<ee:transform doc:name="Transform Message" doc:id="ace7c0e3-2a3c-432c-9931-06c6f2e18f2c" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
-var allGenres = readUrl("/solo-prc-tracks/src/main/resources/lastfm/tags.json" , "application/json")
+var allGenres = readUrl("classpath://lastfm/tags.json" , "application/json")
+var csvContent = vars.originalPayloadMultipartFile.parts.csvFile.content
+
+// On recup un tableau avec uniquement tout les tags
+var allGenresArray = flatten(csvContent map () -> $.genres splitBy(",") map (item) -> trim(item))
+
+// On s'assure que les tags existent
+var filteredGenres = allGenresArray filter (genre) -> (allGenres.tags contains genre)
+
+// On groupe les tags par genres
+var groupedGenres = filteredGenres groupBy ((genre) -> genre)
+
+// On compte le nb occurences par genres
+var countedGenres = groupedGenres mapObject ((value, key) -> {
+  (key): sizeOf(value)
+})
 ---
-allGenres]]></ee:set-payload>
+(countedGenres pluck ((count, genre) -> {
+  "genre": genre,
+  "count": count
+})
+orderBy ((item) -> -item.count))[0 to 1]]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 	</sub-flow>

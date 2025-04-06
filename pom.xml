@@ -74,9 +74,15 @@
 		<dependency>
 			<groupId>69f300d3-91e0-4b6b-a1f5-8ea4f765d901</groupId>
 			<artifactId>solo_prc_tracks</artifactId>
-			<version>1.0.2</version>
+			<version>1.0.4</version>
 			<classifier>raml</classifier>
 			<type>zip</type>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.connectors</groupId>
+			<artifactId>mule-file-connector</artifactId>
+			<version>1.5.2</version>
+			<classifier>mule-plugin</classifier>
 		</dependency>
 	</dependencies>
 

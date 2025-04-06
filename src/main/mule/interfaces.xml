@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
 	<flow name="get:\heartbeat:Router" doc:id="1dc42250-85dc-49b7-bedd-2f18bca09b5a" >
 		<logger level="INFO" doc:name="Start heartbeat flow" doc:id="e8fad0ad-9c74-4b66-8856-3dcd8de700ed" message='#[import prettifyFlowName from modules::ToolBox&#10;---&#10;{&#10;	step:"Start $(prettifyFlowName(flow.name)) flow",&#10;	data: {}&#10;}]' category="${app.name}" />
 		<ee:transform doc:name="Transform Message" doc:id="ff9324a5-fce2-49a6-a4f4-0552a7563506" >
@@ -21,9 +22,10 @@ output application/json
 		</ee:transform>
 		<logger level="INFO" doc:name="End heartbeat flow" doc:id="3ad5a638-a540-49bb-8dfa-980f86231b1e" message='#[import prettifyFlowName from modules::ToolBox&#10;---&#10;{&#10;	step:"Start $(prettifyFlowName(flow.name)) flow",&#10;	data: {}&#10;}]' category="solo-prc-tracks" />
 	</flow>
-	<flow name="post:\events:application\csv:Router" doc:id="103a6887-bbee-4bb0-9d2d-65686e082ca9" >
-		<flow-ref doc:name="postEvents" doc:id="ea7085ac-ed74-4f08-9f07-44d72a4db815" name="postEvents"/>
-		<!-- [STUDIO:"Transform Message"]<ee:transform doc:name="Transform Message" doc:id="784942c1-3bfb-4038-a663-254b080d4245" >
+	<flow name="post:\events:multipart\form-data:Router" doc:id="31a2b415-a4d1-406e-85ab-28bc0eefcc4e" >
+		<set-variable value="#[output application/json --- payload]" doc:name="[originalPayloadMultipartFile]" doc:id="378faef1-8441-48bb-8214-7e7bde37f7cb" variableName="originalPayloadMultipartFile"/>
+		<flow-ref doc:name="postEvents" doc:id="ea7085ac-ed74-4f08-9f07-44d72a4db815" name="postEvents" />
+		<!-- [STUDIO:"Transform Message"]<ee:transform doc:name="Transform Message" doc:id="13e50945-5397-4e24-ab2b-acdfe6491e8f" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
