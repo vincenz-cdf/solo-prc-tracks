@@ -26,19 +26,18 @@ var countedGenres = groupedGenres mapObject ((value, key) -> {
   (key): sizeOf(value)
 })
 ---
-(countedGenres pluck ((count, genre) -> {
-  "genre": genre,
-  "count": count
-})
-orderBy ((item) -> -item.count))[0 to 1]]]></ee:set-payload>
+(countedGenres pluck ((count, genre) -> genre)
+orderBy ((genre) -> -(countedGenres[genre])))
+[0 to 1]]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 		<set-variable value="#[payload]" doc:name="[genres]" doc:id="e011b110-c74a-4b43-8fe2-445fa6bb5cfd" variableName="genres"/>
 		<http:request method="GET" doc:name="to LastFM" doc:id="373f3a23-13f8-4529-97e1-cb36c7d17fab" config-ref="LastfmRequestConfig" path="/tracks">
 			<http:query-params><![CDATA[#[output application/java
 ---
-payload reduce (item, acc={}) -> 
-  acc ++ {(genre: item.genre)}]]]></http:query-params>
+{
+	genres: vars.genres joinBy ","
+}]]]></http:query-params>
 		</http:request>
 		<ee:transform doc:name="Transform Message" doc:id="efecd42a-033a-4ae3-8f99-35c0fc31b8bd" >
 			<ee:message >
@@ -48,7 +47,7 @@ output application/json
 ---
 {
   "date": vars.date,
-  "genres": vars.genres map () -> $.genre,
+  "genres": vars.genres,
   "users": vars.csvFileContent map () -> {
     firstname: $.firstname,
     lastname: $.lastname,
