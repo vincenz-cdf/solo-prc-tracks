@@ -1,5 +1,5 @@
 https:
-  port: "8081"
+  port: "8083"
   
 api:
   basePath: "/api/v1"
@@ -9,9 +9,15 @@ lastfm:
   host: "localhost"
   port: "8090"
   basePath: "/api/v1" 
-
+  
 sftp:
   protocol: "HTTP"
   host: "localhost"
   port: "8082"
+  basePath: "/api/v1" 
+  
+smtp:
+  protocol: "HTTP"
+  host: "localhost"
+  port: "8081"
   basePath: "/api/v1" 

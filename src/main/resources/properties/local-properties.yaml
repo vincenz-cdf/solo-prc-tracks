@@ -15,3 +15,9 @@ sftp:
   host: "localhost"
   port: "8082"
   basePath: "/api/v1" 
+  
+smtp:
+  protocol: "HTTP"
+  host: "localhost"
+  port: "8081"
+  basePath: "/api/v1" 

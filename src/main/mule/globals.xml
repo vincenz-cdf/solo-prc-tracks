@@ -14,4 +14,7 @@
 	<http:request-config name="SFTPRequestConfig" doc:name="HTTP Request configuration" doc:id="f4e1c1ef-d5a8-4959-928b-1e2c5c46c18e" basePath="${sftp.basePath}" >
 		<http:request-connection protocol="${sftp.protocol}" host="${sftp.host}" port="${sftp.port}" />
 	</http:request-config>
+	<http:request-config name="SMTPRequestConfig" doc:name="HTTP Request configuration" doc:id="9c35e1e3-e409-4496-9b37-068ef2a809d9" basePath="${smtp.basePath}" >
+		<http:request-connection protocol="${smtp.protocol}" host="${smtp.host}" port="${smtp.port}" />
+	</http:request-config>
 </mule>
