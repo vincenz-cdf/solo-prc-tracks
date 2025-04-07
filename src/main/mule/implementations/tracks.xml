@@ -11,10 +11,10 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 var allGenres = readUrl("classpath://lastfm/tags.json" , "application/json")
-var csvContent = vars.originalPayloadMultipartFile.parts.csvFile.content
+var csvUsers = read(vars.csvFileContent as String as Binary as String, "application/csv")
 
 // On recup un tableau avec uniquement tout les tags
-var allGenresArray = flatten(csvContent map () -> $.genres splitBy(",") map (item) -> trim(item))
+var allGenresArray = flatten(csvUsers map () -> $.genres splitBy(",") map (item) -> trim(item))
 
 // On s'assure que les tags existent
 var filteredGenres = allGenresArray filter (genre) -> (allGenres.tags contains genre)
@@ -34,5 +34,48 @@ var countedGenres = groupedGenres mapObject ((value, key) -> {
 orderBy ((item) -> -item.count))[0 to 1]]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+		<set-variable value="#[payload]" doc:name="[genres]" doc:id="e011b110-c74a-4b43-8fe2-445fa6bb5cfd" variableName="genres"/>
+		<flow-ref doc:name="requestToLastFM" doc:id="3360febf-09ba-4d5f-9284-0bf45d13962b" name="requestToLastFM"/>
+		<ee:transform doc:name="Transform Message" doc:id="efecd42a-033a-4ae3-8f99-35c0fc31b8bd" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+var csvFile = read(vars.csvFileContent as String as Binary as String, "application/csv")
+---
+{
+  "date": vars.date,
+  "genres": vars.genres map () -> $.genre,
+  "users": csvFile map () -> {
+    firstname: $.firstname,
+    lastname: $.lastname,
+    email: $.email,
+    genres: $.genres splitBy(",") map (genre) -> trim(genre),
+  },
+  "tracks": payload
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<flow-ref doc:name="requestToSFTP" doc:id="f1f7ca44-a7b3-48fa-9687-63613cbf4679" name="requestToSFTP"/>
+	</sub-flow>
+	<sub-flow name="sendEmails" doc:id="c308231e-1f31-4b03-b4ef-f7b8a05d46f8" >
+		<logger level="INFO" doc:name="Logger" doc:id="304998ea-a87b-4481-8a6d-eb9a930f248e" />
+	</sub-flow>
+	<sub-flow name="requestToLastFM" doc:id="cac89cdd-e573-4a9f-b051-81f799ce87fb" >
+		<http:request method="GET" doc:name="to LastFM" doc:id="373f3a23-13f8-4529-97e1-cb36c7d17fab" config-ref="LastfmRequestConfig" path="/tracks">
+			<http:query-params><![CDATA[#[output application/java
+---
+payload reduce (item, acc={}) -> 
+  acc ++ {(genre: item.genre)}]]]></http:query-params>
+		</http:request>
+		<logger level="INFO" doc:name="Logger" doc:id="9a129a78-334f-48e6-83aa-13d13c8a9452" />
+	</sub-flow>
+	<sub-flow name="requestToSFTP" doc:id="89441136-0171-4085-9064-a0d8517e55b5" >
+		<http:request method="POST" doc:name="to SFTP" doc:id="a60b154a-b742-4388-b0bd-89cb71ddbe0c" config-ref="SFTPRequestConfig" path="/events" />
+		<logger level="INFO" doc:name="Logger" doc:id="0c745988-0684-42f7-9b1c-1b19488e7e5a" />
+	</sub-flow>
+	<sub-flow name="requestToSMTP" doc:id="253ab632-bb97-4c92-8f4e-6ef1a85d3d8d" >
+		<http:request method="GET" doc:name="to Sendgrid" doc:id="9a1fecee-5a3a-4e79-a21c-39da654156c7" />
+		<logger level="INFO" doc:name="Logger" doc:id="17337405-7688-40c6-bd23-57cf33756779" />
 	</sub-flow>
 </mule>

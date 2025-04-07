@@ -4,6 +4,14 @@ https:
 api:
   basePath: "/api/v1"
   
-database:
-  user: "toto"
-  password: "${secure::database.password}"
+lastfm:
+  protocol: "HTTP"
+  host: "localhost"
+  port: "8090"
+  basePath: "/api/v1" 
+  
+sftp:
+  protocol: "HTTP"
+  host: "localhost"
+  port: "8082"
+  basePath: "/api/v1" 

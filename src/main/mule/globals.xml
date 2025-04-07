@@ -8,4 +8,10 @@
     <configuration doc:name="Configuration" doc:id="cf389dee-a315-43c7-9278-becde35b54c6" defaultErrorHandler-ref="globalErrorHandler" />
     <secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="7dd845e5-5f7a-4c4c-ba46-91e9e1ae39b8" file="properties/${mule.env}-secure-properties.yaml" key="${mule.encryptionKey}" />
     <configuration-properties doc:name="Configuration properties" doc:id="e1184ea1-9784-446e-bee4-37f498a93ed2" file="properties/common-properties.yaml" />
+	<http:request-config name="LastfmRequestConfig" doc:name="HTTP Request configuration" doc:id="529b39ee-01b5-4100-9c69-f92252feac69" basePath="${lastfm.basePath}" >
+		<http:request-connection protocol="${lastfm.protocol}" host="${lastfm.host}" port="${lastfm.port}" />
+	</http:request-config>
+	<http:request-config name="SFTPRequestConfig" doc:name="HTTP Request configuration" doc:id="f4e1c1ef-d5a8-4959-928b-1e2c5c46c18e" basePath="${sftp.basePath}" >
+		<http:request-connection protocol="${sftp.protocol}" host="${sftp.host}" port="${sftp.port}" />
+	</http:request-config>
 </mule>
