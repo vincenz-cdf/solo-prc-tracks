@@ -18,17 +18,17 @@ var allGenresArray = flatten(vars.csvFileContent map () -> $.genres splitBy(",")
 // On s'assure que les tags existent
 var filteredGenres = allGenresArray filter (genre) -> (allGenres.tags contains genre)
 
-// On groupe les tags par genres
-var groupedGenres = filteredGenres groupBy ((genre) -> genre)
-
 // On compte le nb occurences par genres
-var countedGenres = groupedGenres mapObject ((value, key) -> {
+var countedGenres = (filteredGenres groupBy ((genre) -> genre)) mapObject ((value, key) -> {
   (key): sizeOf(value)
 })
 ---
-(countedGenres pluck ((count, genre) -> genre)
-orderBy ((genre) -> -(countedGenres[genre])))
-[0 to 1]]]></ee:set-payload>
+//allGenresArray
+
+// filteredGenres
+
+(countedGenres orderBy ((genre) -> -(genre)) pluck ((value, key) -> key))[0 to 1]
+]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 		<set-variable value="#[payload]" doc:name="[genres]" doc:id="e011b110-c74a-4b43-8fe2-445fa6bb5cfd" variableName="genres"/>
@@ -69,7 +69,7 @@ output application/json
 	"fileType" : "csv"
 }]]]></http:query-params>
 		</http:request>
-		<set-variable value="#[payload]" doc:name="[csvFile]" doc:id="31c9c862-58fa-4a7a-8dba-da977780edf2" variableName="csvFile"/>
+		<set-variable value='#[payload]' doc:name="[csvFile]" doc:id="31c9c862-58fa-4a7a-8dba-da977780edf2" variableName="csvFile"/>
 		<http:request method="GET" doc:name="to SFTP (GET JSON)" doc:id="e34d30c6-8966-48b6-8674-7e366ac0f000" config-ref="SFTPRequestConfig" path='#["/events/" ++ vars.today as String]' >
 			<http:query-params ><![CDATA[#[output application/java
 ---
@@ -77,6 +77,7 @@ output application/json
 	"fileType" : "json"
 }]]]></http:query-params>
 		</http:request>
+		<logger level="INFO" doc:name="Logger" doc:id="84ebf952-c051-4c68-9084-b952055c1a6d" message="#[vars.csvFile]"/>
 		<ee:transform doc:name="Transform Message" doc:id="7b77813d-a34a-4598-9df7-157f721b4496">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
@@ -86,7 +87,7 @@ output application/json
 {
   "date": vars.today,
   "genres": payload.genres,
-  "users": vars.csvFile map () -> {
+  "users": read(vars.csvFile, "application/csv") map () -> {
     firstname: $.firstname,
     lastname: $.lastname,
     email: $.email,

@@ -60,12 +60,6 @@
 			<classifier>mule-plugin</classifier>
 		</dependency>
 		<dependency>
-			<groupId>org.mule.modules</groupId>
-			<artifactId>mule-apikit-module</artifactId>
-			<version>1.11.3</version>
-			<classifier>mule-plugin</classifier>
-		</dependency>
-		<dependency>
 			<groupId>com.mulesoft.modules</groupId>
 			<artifactId>mule-secure-configuration-property-module</artifactId>
 			<version>1.2.7</version>
@@ -79,9 +73,15 @@
 			<type>zip</type>
 		</dependency>
 		<dependency>
+			<groupId>org.mule.modules</groupId>
+			<artifactId>mule-apikit-module</artifactId>
+			<version>1.11.5</version>
+			<classifier>mule-plugin</classifier>
+		</dependency>
+		<dependency>
 			<groupId>org.mule.connectors</groupId>
 			<artifactId>mule-file-connector</artifactId>
-			<version>1.5.2</version>
+			<version>1.5.3</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
 	</dependencies>
