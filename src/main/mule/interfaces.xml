@@ -42,7 +42,7 @@ output application/json
 	<flow name="schedulerEveryDay" doc:id="81d15216-1028-42df-b57b-379ef889795b" >
 		<scheduler doc:name="Scheduler" doc:id="457efde1-cf31-405a-b466-e6519090a7da" >
 			<scheduling-strategy >
-				<cron expression="0 0 8 * * ?" />
+				<cron expression="0 0 8 * * ?" timeZone="europe/paris"/>
 			</scheduling-strategy>
 		</scheduler>
 		<logger level="INFO" doc:name="Start flow" doc:id="f2745d5c-5d81-44e1-b8a7-9b088d9e4e14" message='#[import prettifyFlowName from modules::ToolBox&#10;---&#10;{&#10;	step:"Start $(prettifyFlowName(flow.name)) flow",&#10;	data: {}&#10;}]' category="${app.name}" />
