@@ -25,9 +25,10 @@ output application/json
 	<flow name="post:\events:multipart\form-data:Router" doc:id="31a2b415-a4d1-406e-85ab-28bc0eefcc4e" >
 		<logger level="INFO" doc:name="Start flow" doc:id="ce3b74f8-728c-40a2-8700-57fcdb12d6d2" message='#[import prettifyFlowName from modules::ToolBox&#10;---&#10;{&#10;	step:"Start $(prettifyFlowName(flow.name)) flow",&#10;	data: {}&#10;}]' category="${app.name}" />
 		<set-variable value='#[import * from dw::core::Binaries&#10;output application/java &#10;--- &#10;read(fromBase64(payload.parts.csvFile.content as String), "application/csv")]' doc:name="[csvFileContent]" doc:id="dd2ee547-197c-433b-9721-ad55baba988b" variableName="csvFileContent"/>
-		<set-variable value="#[payload.parts.fileName.content]" doc:name="[date]" doc:id="8e596af4-319a-479c-966e-2d27f17fb0fa" variableName="date" />
+		<set-variable value="#[payload.parts.sendDate.content]" doc:name="[sendDate]" doc:id="8e596af4-319a-479c-966e-2d27f17fb0fa" variableName="sendDate" />
+		<set-variable value="#[payload.parts.eventDate.content]" doc:name="[eventDate]" doc:id="8adba299-3db4-4b34-bcb2-e683911aa51a" variableName="eventDate" />
 		<flow-ref doc:name="postEvents" doc:id="ea7085ac-ed74-4f08-9f07-44d72a4db815" name="postEvents" />
-		<ee:transform doc:name="Transform Message" doc:id="13e50945-5397-4e24-ab2b-acdfe6491e8f" >
+		<ee:transform doc:name="Event created succesfully" doc:id="13e50945-5397-4e24-ab2b-acdfe6491e8f" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
@@ -46,7 +47,7 @@ output application/json
 			</scheduling-strategy>
 		</scheduler>
 		<logger level="INFO" doc:name="Start flow" doc:id="f2745d5c-5d81-44e1-b8a7-9b088d9e4e14" message='#[import prettifyFlowName from modules::ToolBox&#10;---&#10;{&#10;	step:"Start $(prettifyFlowName(flow.name)) flow",&#10;	data: {}&#10;}]' category="${app.name}" />
-		<set-variable value='#[now () as String {format: "uuuu-MM-dd"}]' doc:name="[today]" doc:id="19aeb2c7-96d5-41e0-bfea-c704f5db1d40" variableName="today"/>
+		<set-variable value='#["2025-04-11"]' doc:name="[today]" doc:id="19aeb2c7-96d5-41e0-bfea-c704f5db1d40" variableName="today"/>
 		<flow-ref doc:name="sendEmails" doc:id="5912035d-7ccd-43cc-ab1b-c7de65fa225c" name="sendEmails"/>
 		<logger level="INFO" doc:name="End flow" doc:id="9abc7bc0-427c-4cbe-815f-8845af31e35b" message='#[import prettifyFlowName from modules::ToolBox&#10;---&#10;{&#10;	step:"Start $(prettifyFlowName(flow.name)) flow",&#10;	data: {}&#10;}]' category="solo-prc-tracks" />
 	</flow>

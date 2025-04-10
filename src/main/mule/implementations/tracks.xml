@@ -39,14 +39,15 @@ var countedGenres = (filteredGenres groupBy ((genre) -> genre)) mapObject ((valu
 	genres: vars.genres joinBy ","
 }]]]></http:query-params>
 		</http:request>
-		<ee:transform doc:name="Transform Message" doc:id="efecd42a-033a-4ae3-8f99-35c0fc31b8bd" >
+		<ee:transform doc:name="Datamapping en EDM" doc:id="efecd42a-033a-4ae3-8f99-35c0fc31b8bd" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 
 ---
 {
-  "date": vars.date,
+  "sendDate": vars.sendDate,
+  "eventDate": vars.eventDate,
   "genres": vars.genres,
   "users": vars.csvFileContent map () -> {
     firstname: $.firstname,
@@ -85,7 +86,8 @@ output application/json
 
 ---
 {
-  "date": vars.today,
+  "sendDate": vars.today,
+  "eventDate": payload.eventDate, 
   "genres": payload.genres,
   "users": read(vars.csvFile, "application/csv") map () -> {
     firstname: $.firstname,
