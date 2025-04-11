@@ -9,6 +9,16 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<logger level="INFO" doc:name="Error" doc:id="0253c776-33ce-4f94-9920-c707429de4b5" />
 	</sub-flow>
 	<error-handler name="globalErrorHandler" doc:id="31bf61d0-f37e-4f76-839f-98748cbbf955" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="SFTP File not found" doc:id="5a43f348-8842-4477-9ff5-ccedff43361c" type="MUSIK:FILE_NOT_FOUND">
+			<set-variable value="NOT_FOUND" doc:name="[code]" doc:id="b9344d03-2057-4c02-b4bd-56776ff176fc" variableName="code" />
+			<flow-ref doc:name="Flow Reference" doc:id="56563d1b-e846-48e5-a05e-d31ba0f334ca" name="errorHandler" />
+			<set-variable value="406" doc:name="[httpStatus]" doc:id="2d94e40d-0106-44b6-b4ac-d6f7fa478240" variableName="httpStatus" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="Not acceptable SFTP" doc:id="6e35cc13-d117-4855-a2d0-5bbad7fea972" type="MUSIK:INVALID_FILE">
+			<set-variable value="NOT_FOUND" doc:name="[code]" doc:id="76e81e2d-0640-408e-812a-47d860fbdd89" variableName="code" />
+			<flow-ref doc:name="Flow Reference" doc:id="9d74076d-8880-43ac-a377-a794e70c82f9" name="errorHandler" />
+			<set-variable value="406" doc:name="[httpStatus]" doc:id="1e94e297-1d4d-4adb-8b12-e4ce15f980f7" variableName="httpStatus" />
+		</on-error-propagate>
 		<on-error-propagate enableNotifications="true" logException="true" doc:name="Bad request" doc:id="98a88a9a-fae1-42af-a007-89513e44bc8d" type="APIKIT:BAD_REQUEST">
 			<set-variable value="BAD_REQUEST" doc:name="[code]" doc:id="a7da8ad4-574e-44b6-9d3f-9faa6523c8cd" variableName="code"/>
 			<flow-ref doc:name="Flow Reference" doc:id="03fe0d64-42ac-4e52-a8e3-601486ec5eea" name="errorHandler"/>
