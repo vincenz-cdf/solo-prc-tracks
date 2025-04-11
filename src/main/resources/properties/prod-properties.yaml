@@ -3,21 +3,30 @@ https:
   
 api:
   basePath: "/api/v1"
+  autodiscovery: "20293803"
+ 
+authorizations:
+  client_id: "6e9432b9716d48a682dee7968b567e3a"
+  client_secret: "${secure::client.secret}"
+  
+scheduler:
+  cron: "0 0 8 * * ?"
+  timezone: "Europe/Paris"
   
 lastfm:
-  protocol: "HTTP"
-  host: "localhost"
-  port: "8090"
+  protocol: "HTTPS"
+  host: "solo-sys-lastfm-pu6kmk.5sc6y6-3.usa-e2.cloudhub.io"
+  port: "443"
   basePath: "/api/v1" 
   
 sftp:
-  protocol: "HTTP"
-  host: "localhost"
-  port: "8082"
+  protocol: "HTTPS"
+  host: "sol-sys-sftp-pu6kmk.5sc6y6-2.usa-e2.cloudhub.io"
+  port: "443"
   basePath: "/api/v1" 
   
 smtp:
-  protocol: "HTTP"
-  host: "localhost"
-  port: "8081"
-  basePath: "/api/v1" 
+  protocol: "HTTPS"
+  host: "solo-sys-smtp-pu6kmk.5sc6y6-3.usa-e2.cloudhub.io"
+  port: "443"
+  basePath: "/api/v1"

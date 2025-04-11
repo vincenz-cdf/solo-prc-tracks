@@ -1,2 +1,2 @@
-database:
-  password: "![MYENCR]"
+client:
+  secret: "![uI/6ta6yuAq3tEnvdBeqGHEmHLfjll8funvjOm6ftlkAfdA+9UBn2dIVXChJ5onn]"

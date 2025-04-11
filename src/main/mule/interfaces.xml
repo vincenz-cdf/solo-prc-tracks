@@ -41,13 +41,13 @@ output application/json
 		<logger level="INFO" doc:name="End flow" doc:id="b365eec7-089e-4322-af4c-856d71ba3190" message='#[import prettifyFlowName from modules::ToolBox&#10;---&#10;{&#10;	step:"Start $(prettifyFlowName(flow.name)) flow",&#10;	data: {}&#10;}]' category="solo-prc-tracks" />
 	</flow>
 	<flow name="schedulerEveryDay" doc:id="81d15216-1028-42df-b57b-379ef889795b" >
-		<scheduler doc:name="Scheduler" doc:id="457efde1-cf31-405a-b466-e6519090a7da" >
+		<scheduler doc:name="Everyday 8am" doc:id="457efde1-cf31-405a-b466-e6519090a7da" >
 			<scheduling-strategy >
-				<cron expression="0 0 8 * * ?" timeZone="europe/paris"/>
+				<cron expression="${scheduler.cron}" timeZone="${scheduler.timezone}"/>
 			</scheduling-strategy>
 		</scheduler>
 		<logger level="INFO" doc:name="Start flow" doc:id="f2745d5c-5d81-44e1-b8a7-9b088d9e4e14" message='#[import prettifyFlowName from modules::ToolBox&#10;---&#10;{&#10;	step:"Start $(prettifyFlowName(flow.name)) flow",&#10;	data: {}&#10;}]' category="${app.name}" />
-		<set-variable value='#["2025-04-11"]' doc:name="[today]" doc:id="19aeb2c7-96d5-41e0-bfea-c704f5db1d40" variableName="today"/>
+		<set-variable value='#[now () as String {format: "uuuu-MM-dd"}]' doc:name="[today]" doc:id="19aeb2c7-96d5-41e0-bfea-c704f5db1d40" variableName="today"/>
 		<flow-ref doc:name="sendEmails" doc:id="5912035d-7ccd-43cc-ab1b-c7de65fa225c" name="sendEmails"/>
 		<logger level="INFO" doc:name="End flow" doc:id="9abc7bc0-427c-4cbe-815f-8845af31e35b" message='#[import prettifyFlowName from modules::ToolBox&#10;---&#10;{&#10;	step:"Start $(prettifyFlowName(flow.name)) flow",&#10;	data: {}&#10;}]' category="solo-prc-tracks" />
 	</flow>

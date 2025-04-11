@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+<mule xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
     <http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="265702c5-0971-4cab-9095-17e6d6fb8c39" basePath="${api.basePath}">
         <http:listener-connection host="0.0.0.0" port="${https.port}" />
     </http:listener-config>
@@ -10,11 +11,24 @@
     <configuration-properties doc:name="Configuration properties" doc:id="e1184ea1-9784-446e-bee4-37f498a93ed2" file="properties/common-properties.yaml" />
 	<http:request-config name="LastfmRequestConfig" doc:name="HTTP Request configuration" doc:id="529b39ee-01b5-4100-9c69-f92252feac69" basePath="${lastfm.basePath}" >
 		<http:request-connection protocol="${lastfm.protocol}" host="${lastfm.host}" port="${lastfm.port}" />
+		<http:default-headers >
+			<http:default-header key="client_id" value="${authorizations.client_id}" />
+			<http:default-header key="client_secret" value="${authorizations.client_secret}" />
+		</http:default-headers>
 	</http:request-config>
-	<http:request-config name="SFTPRequestConfig" doc:name="HTTP Request configuration" doc:id="f4e1c1ef-d5a8-4959-928b-1e2c5c46c18e" basePath="${sftp.basePath}" >
+	<http:request-config name="SFTPRequestConfig" doc:name="HTTP Request configuration" doc:id="f4e1c1ef-d5a8-4959-928b-1e2c5c46c18e" basePath="${sftp.basePath}" responseTimeout="30000">
 		<http:request-connection protocol="${sftp.protocol}" host="${sftp.host}" port="${sftp.port}" />
+		<http:default-headers >
+			<http:default-header key="client_id" value="${authorizations.client_id}" />
+			<http:default-header key="client_secret" value="${authorizations.client_secret}" />
+		</http:default-headers>
 	</http:request-config>
 	<http:request-config name="SMTPRequestConfig" doc:name="HTTP Request configuration" doc:id="9c35e1e3-e409-4496-9b37-068ef2a809d9" basePath="${smtp.basePath}" >
 		<http:request-connection protocol="${smtp.protocol}" host="${smtp.host}" port="${smtp.port}" />
+		<http:default-headers >
+			<http:default-header key="client_id" value="${authorizations.client_id}" />
+			<http:default-header key="client_secret" value="${authorizations.client_secret}" />
+		</http:default-headers>
 	</http:request-config>
+	<api-gateway:autodiscovery apiId="${api.autodiscovery}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="e2bddffb-4b84-4bf9-8ea3-7cde93da7290" flowRef="solo_prc_tracks-main" />
 </mule>

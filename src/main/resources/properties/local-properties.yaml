@@ -3,6 +3,15 @@ https:
   
 api:
   basePath: "/api/v1"
+  autodiscovery: "0000"
+  
+authorizations:
+  client_id: ""
+  client_secret: ""
+  
+scheduler:
+  cron: "0 0 8 * * ?"
+  timezone: "Europe/Paris"
   
 lastfm:
   protocol: "HTTP"
